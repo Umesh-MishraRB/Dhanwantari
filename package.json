@@ -1,0 +1,15 @@
+{
+  "name": "dhanwantari",
+  "private": true,
+  "scripts": {
+    "setup": "npm --prefix server install && npm --prefix client install",
+    "seed": "npm --prefix server run seed",
+    "remove-user": "npm --prefix server run remove-user --",
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "check-mapping": "npm --prefix server run check-mapping",
+    "verify-doctor": "npm --prefix server run verify-doctor --"
+  }
+}

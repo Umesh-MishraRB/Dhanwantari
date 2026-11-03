@@ -1,0 +1,171 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------- Theme tokens (dark = default, light = html.light) ---------------- */
+:root {
+  --c-ink-950: 2 2 26; --c-ink-900: 5 5 43; --c-ink-800: 10 10 61; --c-ink-700: 17 17 79; --c-ink-600: 27 27 107;
+  --c-lav-100: 230 232 255; --c-lav-200: 197 202 255; --c-lav-300: 165 172 245; --c-lav-400: 129 137 224;
+  --glass-a: rgba(30, 30, 120, .30); --glass-b: rgba(10, 10, 62, .30); --glass-border: rgba(140, 150, 255, .22);
+  --soft-bg: rgba(20, 20, 90, .25); --soft-border: rgba(140, 150, 255, .16);
+  --input-bg: rgba(5, 5, 40, .55); --input-border: rgba(140, 150, 255, .25);
+  --btn-a: #ffffff; --btn-b: #dcdfff;
+  --shadow-glass: 0 30px 80px -20px rgba(0, 0, 40, .65), inset 0 1px 0 rgba(255, 255, 255, .07);
+  --blob-op: 1;
+  --hero-a: #dde0ff; --hero-b: #aeb5f6;
+  --frame-a: rgba(28, 28, 120, .26); --frame-b: rgba(6, 6, 52, .20); --frame-border: rgba(140, 150, 255, .28); --frame-shade: rgba(2, 2, 40, .55);
+  --overlay: rgba(2, 2, 30, .55);
+  color-scheme: dark;
+}
+html.light {
+  --c-ink-950: 240 243 255; --c-ink-900: 255 255 255; --c-ink-800: 230 234 255; --c-ink-700: 220 225 255; --c-ink-600: 205 211 250;
+  --c-lav-100: 20 20 63; --c-lav-200: 43 44 102; --c-lav-300: 74 76 154; --c-lav-400: 101 103 168;
+  --glass-a: rgba(255, 255, 255, .82); --glass-b: rgba(245, 247, 255, .72); --glass-border: rgba(80, 90, 200, .22);
+  --soft-bg: rgba(255, 255, 255, .65); --soft-border: rgba(80, 90, 200, .18);
+  --input-bg: rgba(255, 255, 255, .92); --input-border: rgba(80, 90, 200, .32);
+  --btn-a: #2e2f78; --btn-b: #14143f;
+  --shadow-glass: 0 18px 50px -22px rgba(40, 50, 140, .35), inset 0 1px 0 rgba(255, 255, 255, .9);
+  --blob-op: .3;
+  --hero-a: #3b3fa8; --hero-b: #14143f;
+  --frame-a: rgba(255, 255, 255, .62); --frame-b: rgba(236, 240, 255, .5); --frame-border: rgba(80, 90, 200, .25); --frame-shade: rgba(255, 255, 255, .35);
+  --overlay: rgba(230, 234, 255, .6);
+  color-scheme: light;
+}
+body { transition: background-color .25s, color .25s; }
+
+html, body, #root { min-height: 100%; }
+body {
+  @apply bg-ink-950 text-lav-200 font-sans antialiased;
+  margin: 0;
+  font-size: 16.5px; /* Baloo has small x-height; this keeps body text comfortable */
+}
+html { scroll-behavior: smooth; }
+:root { --font-lang: "Baloo Bhai 2"; }
+/* Latin glyphs always come from Baloo Bhai 2; Devanagari etc. fall through to the language font (Hindi: Tiro Devanagari Sanskrit). */
+html[lang="hi"] body, html[lang="mr"] body { font-weight: 400; }
+/* Indic / Arabic scripts need more vertical room than Latin or marks get clipped */
+html:not([lang="en"]) body { line-height: 1.7; }
+html[lang="ur"] body { line-height: 2.1; }
+html:not([lang="en"]) .hero-title { line-height: 1.32; letter-spacing: 0; }
+html:not([lang="en"]) .hero-word { padding-bottom: .22em; }
+html:not([lang="en"]) .label, html:not([lang="en"]) .badge { letter-spacing: 0; text-transform: none; }
+::selection { background: rgba(124, 131, 255, .45); color: #fff; }
+* { scrollbar-width: thin; scrollbar-color: #2b2b8f transparent; }
+
+@layer components {
+  .glass {
+    @apply rounded-2xl border shadow-glass;
+    border-color: var(--glass-border);
+    background: linear-gradient(180deg, var(--glass-a), var(--glass-b));
+    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  }
+  .glass-soft { @apply rounded-xl border; border-color: var(--soft-border); background: var(--soft-bg); }
+
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition duration-200 disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400; }
+  .btn-primary { @apply btn text-ink-900 hover:-translate-y-px hover:shadow-[0_8px_30px_-8px_rgba(160,170,255,.7)]; background: linear-gradient(180deg, var(--btn-a), var(--btn-b)); }
+  .btn-ghost { @apply btn border border-[rgba(150,160,255,.35)] text-lav-100 hover:bg-[rgba(120,130,255,.15)]; }
+  .btn-danger { @apply btn border border-red-400/40 text-red-200 hover:bg-red-500/15; }
+  .btn-accent { @apply btn bg-brand-500 text-white hover:bg-brand-400; }
+  .btn-sm { @apply px-3.5 py-1.5 text-xs; }
+
+  .label { @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-lav-300; }
+  .input {
+    @apply w-full rounded-xl border px-3.5 py-2.5 text-sm text-lav-100 placeholder:text-lav-400/60 outline-none transition;
+    border-color: var(--input-border); background: var(--input-bg);
+  }
+  .input:focus { @apply border-brand-400; box-shadow: 0 0 0 3px rgba(124, 131, 255, .22); }
+  select.input option { background: rgb(var(--c-ink-800)); color: rgb(var(--c-lav-100)); }
+
+  .chip { @apply inline-flex items-center rounded-full border border-[rgba(150,160,255,.3)] px-3 py-1 text-xs text-lav-200 transition hover:bg-[rgba(120,130,255,.15)]; }
+  .chip-active { @apply border-transparent bg-lav-100 text-ink-900 hover:bg-lav-100; }
+
+  .badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide; }
+
+  .page { @apply mx-auto w-full max-w-6xl px-4 pb-20 pt-28 sm:px-6; }
+  .h1 { @apply text-3xl font-light tracking-tight text-lav-100 sm:text-4xl; }
+  .h2 { @apply text-lg font-semibold text-lav-100; }
+  .muted { @apply text-sm text-lav-400; }
+}
+
+/* ---------------- Landing (matches the reference video) ---------------- */
+.flow-blob { position: absolute; border-radius: 9999px; filter: blur(60px); opacity: 1; will-change: transform; }
+.flow-blob.a { width: 52vw; height: 80vh; right: -8vw; top: -10vh; background: radial-gradient(closest-side, rgba(100, 90, 255, 1), rgba(70, 50, 235, .45) 60%, transparent); animation: driftA 14s ease-in-out infinite alternate; }
+.flow-blob.b { width: 40vw; height: 60vh; right: 4vw; bottom: -14vh; background: radial-gradient(closest-side, rgba(130, 150, 255, .95), rgba(100, 80, 240, .4) 60%, transparent); animation: driftB 17s ease-in-out infinite alternate; }
+.flow-blob.c { width: 60vw; height: 26vh; left: 4vw; top: 40vh; background: radial-gradient(closest-side, rgba(80, 80, 245, .85), transparent); animation: driftC 11s ease-in-out infinite alternate; }
+.flow-blob.d { width: 20vw; height: 28vh; right: 2vw; top: 36vh; background: radial-gradient(closest-side, rgba(170, 210, 255, .85), transparent); animation: driftB 9s ease-in-out infinite alternate-reverse; }
+@keyframes driftA { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(-4vw, 5vh, 0) scale(1.08); } }
+@keyframes driftB { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(3vw, -6vh, 0) scale(1.12); } }
+@keyframes driftC { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(8vw, 2vh, 0); } }
+
+.frame {
+  position: absolute; inset: 20px 3vw; border-radius: 28px; overflow: hidden;
+  border: 1px solid var(--frame-border);
+  background: linear-gradient(180deg, var(--frame-a), var(--frame-b));
+  backdrop-filter: blur(26px) saturate(1.25); -webkit-backdrop-filter: blur(26px) saturate(1.25);
+  box-shadow: 0 40px 100px -30px rgba(0, 0, 50, .8), inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+.frame::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 90% at 20% 30%, var(--frame-shade), transparent 60%); }
+
+.hero-title {
+  font-weight: 500; letter-spacing: -0.02em; line-height: 1.07;
+  font-size: clamp(2.5rem, 6.4vw, 5.6rem);
+  color: rgb(var(--c-lav-200));
+}
+.hero-word { display: inline-block; background: linear-gradient(180deg, var(--hero-a), var(--hero-b)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; padding-bottom: .08em; animation: fade-up .95s cubic-bezier(.2, .7, .2, 1) both; }
+.nav-link { @apply relative text-sm font-medium text-lav-200 transition hover:text-lav-100; }
+.nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: currentColor; transform: scaleX(0); transition: transform .3s; }
+.nav-link:hover::after { transform: scaleX(1); }
+
+.seg { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 9999px; border: 1px solid var(--glass-border); background: var(--input-bg); }
+.seg button { position: relative; z-index: 1; padding: 8px 0; font-size: 13px; font-weight: 500; border-radius: 9999px; transition: color .25s; }
+.seg .thumb { position: absolute; top: 4px; bottom: 4px; width: calc(50% - 4px); border-radius: 9999px; background: linear-gradient(180deg, var(--btn-a), var(--btn-b)); transition: transform .35s cubic-bezier(.3, .8, .3, 1); }
+
+.stagger > * { animation: fade-up .7s cubic-bezier(.2, .7, .2, 1) both; }
+.stagger > *:nth-child(2) { animation-delay: .06s; } .stagger > *:nth-child(3) { animation-delay: .12s; }
+.stagger > *:nth-child(4) { animation-delay: .18s; } .stagger > *:nth-child(5) { animation-delay: .24s; }
+.stagger > *:nth-child(6) { animation-delay: .30s; }
+
+@media (max-width: 640px) { .frame { inset: 10px; border-radius: 22px; } }
+@media (prefers-reduced-motion: reduce) {
+  .flow-blob, .hero-word, .stagger > * { animation: none !important; }
+}
+
+/* ---------------- Light-theme fixes for hard-coded utility colours ---------------- */
+html.light .bg-white\/5, html.light .hover\:bg-white\/5:hover { background-color: rgba(60, 70, 180, .05); }
+html.light .bg-white\/10, html.light .hover\:bg-white\/10:hover { background-color: rgba(60, 70, 180, .09); }
+html.light .bg-white\/15 { background-color: rgba(60, 70, 180, .14); }
+html.light .border-white\/10 { border-color: rgba(60, 70, 180, .16); }
+html.light .hover\:text-white:hover { color: rgb(var(--c-lav-100)); }
+html.light .text-emerald-200 { color: #047857; }
+html.light .text-amber-200, html.light .text-amber-300 { color: #b45309; }
+html.light .text-amber-100\/90, html.light .text-amber-200\/90 { color: #92400e; }
+html.light .text-orange-200 { color: #c2410c; }
+html.light .text-red-200 { color: #b91c1c; }
+html.light .text-red-300 { color: #dc2626; }
+
+html.light ::selection { background: rgba(91, 91, 240, .25); color: inherit; }
+html.light * { scrollbar-color: #b5bbf0 transparent; }
+
+/* ---------------- Landing sections / motion ---------------- */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s cubic-bezier(.2, .7, .2, 1), transform .8s cubic-bezier(.2, .7, .2, 1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+.lift { transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s, background-color .35s; }
+.lift:hover { transform: translateY(-6px); box-shadow: 0 24px 50px -24px rgba(91, 91, 240, .55); }
+.step-num { background: linear-gradient(135deg, #7c83ff, #5b5bf0); color: #fff; }
+.shine { background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .22) 50%, transparent 70%); background-size: 220% 100%; animation: shine 3.2s ease-in-out infinite; }
+@keyframes shine { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+.bob { animation: bob 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .shine, .bob { animation: none; } }
+
+.skip-link { position: absolute; left: -999px; top: 8px; z-index: 100; padding: 8px 14px; border-radius: 9999px; background: rgb(var(--c-lav-100)); color: rgb(var(--c-ink-900)); }
+.skip-link:focus { left: 8px; }
+
+/* RTL (Urdu): flip directional icons that signal "next" */
+html[dir="rtl"] .rtl-flip { transform: scaleX(-1); }
+
+/* video player used for the doctor intro */
+.video-frame { aspect-ratio: 16 / 9; width: 100%; background: #000; border-radius: 1rem; }
